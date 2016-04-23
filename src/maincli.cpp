@@ -147,15 +147,16 @@ void MenuParagem(){
 		string linha;
 		int opcao2;
 		cin >>tempo;
-		cout << "Custo da viagem";
+		cout << "Custo da viagem(euros):";
 		cin >>custo;
-		cout <<"Distancia entre as paragens:";
+		cout <<"Distancia entre as paragens(metros):";
 		cin >>distancia;
 		cout << "Tipo de transporte disponiveis:"<<endl;
 		cout << "1: metro"<<endl;
 		cout << "2: comboio"<<endl;
 		cout << "3: autocarro"<<endl;
 		cout << "4: a pé"<<endl;
+		cout <<"Escolha":;
 		cin >> opcao2;
 		cin.ignore();
 		cin.clear();
