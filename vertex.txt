@@ -1,0 +1,6 @@
+São Bento,100,200
+Luis XV,200,200
+Oriente,300,300
+Paragem,100,500
+Paragem 5,200,400
+Benfica,500,100

@@ -1,0 +1,2 @@
+0,1,Metro,20,se,1,20
+4,3,Comboio,10,Porto,20,20
