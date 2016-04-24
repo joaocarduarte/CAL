@@ -156,7 +156,7 @@ void MenuParagem(){
 		cout << "2: comboio"<<endl;
 		cout << "3: autocarro"<<endl;
 		cout << "4: a pé"<<endl;
-		cout <<"Escolha":;
+		cout <<"Escolha:";
 		cin >> opcao2;
 		cin.ignore();
 		cin.clear();
