@@ -28,5 +28,10 @@ bool Paragem::operator==(Paragem p){
 		return true;
 	else return false;
 }
+bool Paragem::operator!=(Paragem p){
+	if (this->nome==p.nome&& this->x==p.x&&this->y==p.y)
+			return false;
+	else return true;
+}
 
 

@@ -36,7 +36,7 @@ if ( f.is_open() ) {
 	}
 }
 f.close();
-string sourc,dest,tipo,dinheiro,linha,tempo,distancia;
+string sourc,dest,tipo,dinheiro,linha,tempo;
 e.open("edge.txt");
 if(e.is_open()){
 	while(!e.eof()){
@@ -47,24 +47,23 @@ if(e.is_open()){
 		getline(ss,tipo,',');
 		getline(ss,dinheiro,',');
 		getline(ss,linha,',');
-		getline(ss,tempo,',');
-		getline(ss,distancia,',');
+		getline(ss,tempo);
 		Transportes t;
 
 		if(tipo=="Metro"){
-			t=Metro(linha,atoi(dinheiro.c_str()),atoi(distancia.c_str()),atoi(tempo.c_str()));
+			t=Metro(linha,atoi(dinheiro.c_str()),atoi(tempo.c_str()));
 		}
 
 		if(tipo== "Comboio"){
-					t=Comboio(linha,atoi(dinheiro.c_str()),atoi(distancia.c_str()),atoi(tempo.c_str()));
+					t=Comboio(linha,atoi(dinheiro.c_str()),atoi(tempo.c_str()));
 				}
 
 		if(tipo== "Autocarro"){
-					t=Autocarro(linha,atoi(dinheiro.c_str()),atoi(distancia.c_str()),atoi(tempo.c_str()));
+					t=Autocarro(linha,atoi(dinheiro.c_str()),atoi(tempo.c_str()));
 				}
 
 		if(tipo== "Caminhar"){
-					t=Caminhar(linha,atoi(dinheiro.c_str()),atoi(distancia.c_str()),atoi(tempo.c_str()));
+					t=Caminhar(linha,atoi(dinheiro.c_str()),atoi(tempo.c_str()));
 				}
 
 
@@ -99,9 +98,9 @@ int k=0;
 	for (unsigned int i=0;i<g.getVertexSet().size();i++ ) {
 		for(unsigned int j=0; j<g.getVertexSet()[i]->getAdj().size();j++){
 			if(k==g.NumArestas()-1)
-			e << i<<','<<g.findadjonVertex(g.getVertexSet()[i]->getAdj()[j].getDest()) <<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getNome()<<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getDinheiro()<<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getLinha()<<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getTempo()<<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getDistancia();
+			e << i<<','<<g.findadjonVertex(g.getVertexSet()[i]->getAdj()[j].getDest()) <<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getNome()<<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getDinheiro()<<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getLinha()<<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getTempo();
 			else
-				e << i<<','<<g.findadjonVertex(g.getVertexSet()[i]->getAdj()[j].getDest()) <<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getNome()<<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getDinheiro()<<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getLinha()<<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getTempo()<<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getDistancia()<<endl;
+				e << i<<','<<g.findadjonVertex(g.getVertexSet()[i]->getAdj()[j].getDest()) <<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getNome()<<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getDinheiro()<<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getLinha()<<','<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getTempo()<<endl;
 			k++;
 		}
 

@@ -21,6 +21,7 @@ public:
 	int getX()const;
 	int getY()const;
 bool operator==(Paragem p);
+bool operator!=(Paragem p);
 };
 
 

@@ -16,9 +16,10 @@ void MenuInicial(){
 
 cout << "------Menu Inicial-----"<<endl;
 cout << "                       "<<endl;
-cout << "1. ver grafo           "<<endl;
+cout << "1. ver grafo em modo Viewer"<<endl;
 cout << "2. Menu de Paragens    "<<endl;
-cout << "3. quit                "<<endl;
+cout << "3. Pesquisas no grafo         "<<endl;
+cout << "4. quit                "<<endl;
 cout <<"Qual a opção :";
 char opcao;
 cin >> opcao;
@@ -39,7 +40,8 @@ case '1':{
 		for(unsigned int k=0;k<g.getVertexSet()[j]->getAdj().size();k++){
 			Sleep(2000);
 			gv->addEdge(e,j,g.findadjonVertex(g.getVertexSet()[j]->getAdj()[k].getDest()),EdgeType::DIRECTED);
-			gv->setEdgeLabel(e,g.getVertexSet()[j]->getAdj()[k].getTransporte().getLinha());
+			string s=g.getVertexSet()[j]->getAdj()[k].getTransporte().getLinha();
+			gv->setEdgeLabel(e,s); //TODO
 			gv->rearrange();
 
 
@@ -53,6 +55,9 @@ case '2':
 	MenuParagem();
 	break;
 case '3':
+	MenuPesquisas();
+	break;
+case '4':
 	return ;
 	break;
 default:
@@ -60,6 +65,103 @@ default:
 	break;
 
 }
+}
+void MenuPesquisas(){
+	cout <<"----- Menu Pesquisas----"<<endl;
+	cout <<"                        "<<endl;
+	cout << "1. Percurso mais rápido(bellman)"<<endl;
+	cout << "2. Percurso Mais barato(dijkstra)"<<endl;
+	cout << "outro qualquer retornará ao menu anterior"<<endl;
+	char opcao;
+	string nome;
+	int x,y;
+	cout <<"Opção: ";
+	cin >>opcao;
+	switch(opcao){
+	case '1':{
+		cin.ignore();
+		cin.clear();
+		cout <<"Onde se encontra:";
+		getline(cin,nome);
+
+cout <<"Coordenada x:";
+cin >> x;
+cout <<"Coordenada y:";
+cin >> y;
+for(unsigned int i=0; i< g.getVertexSet().size();i++){
+						cout << i+1 << ") "<< g.getVertexSet()[i]->getInfo().getNome()<<endl;
+					}
+cout <<"Para onde deseja ir:";
+					unsigned int k;
+					cin >>k;
+					k--;
+					bool fer=false;
+Paragem p(nome,x,y);
+if(g.addVertex(p)){
+fer=true;
+for(unsigned int i=0; i<g.getVertexSet().size();i++){
+	g.addEdge(p,g.getVertexSet()[i]->getInfo(),Caminhar("Pé",0,sqrt(pow(g.getVertexSet()[i]->getInfo().getX()-x,2)+pow(g.getVertexSet()[i]->getInfo().getY()-y,2))));
+}
+}
+
+		g.bellmanFordShortestPath(p);
+		vector <Paragem>v=g.getPath(p,g.getVertexSet()[k]->getInfo());
+		for(unsigned int i = 0; i < v.size(); i++) {
+			if(i==v.size()-1)
+				cout <<v[i].getNome()<<endl;
+			else
+				cout << v[i].getNome() <<"->";
+			}
+		if(fer)g.removeVertex(p);
+	}
+MenuPesquisas();
+break;
+	case '2':{
+		cin.ignore();
+		cin.clear();
+	cout <<"Onde se encontra:";
+	getline(cin,nome);
+
+cout <<"Coordenada x:";
+cin >> x;
+cout <<"Coordenada y:";
+cin >> y;
+for(unsigned int i=0; i< g.getVertexSet().size();i++){
+					cout << i+1 << ") "<< g.getVertexSet()[i]->getInfo().getNome()<<endl;
+				}
+cout <<"Para onde deseja ir:";
+				unsigned int k;
+				cin >>k;
+k--;
+bool fer=false;
+Paragem p(nome,x,y);
+if(g.addVertex(p)){
+fer=true;
+for(unsigned int i=0; i<g.getVertexSet().size();i++){
+g.addEdge(p,g.getVertexSet()[i]->getInfo(),Caminhar("Pé",0,sqrt(pow(g.getVertexSet()[i]->getInfo().getX()-x,2)+pow(g.getVertexSet()[i]->getInfo().getY()-y,2))));
+}
+}
+
+		g.dijkstraShortestPath(p);
+		vector <Paragem>v=g.getPath(p,g.getVertexSet()[k]->getInfo());
+				for(unsigned int i = 0; i < v.size(); i++) {
+					if(i==v.size()-1)
+						cout <<v[i].getNome()<<endl;
+					else
+						cout << v[i].getNome() <<"->";
+					}
+
+				if(fer)g.removeVertex(p);
+
+	}
+	MenuPesquisas();
+		break;
+default:
+	MenuInicial();
+
+
+
+	}
 }
 void MenuParagem(){
 	cout << "------Menu Paragem----"<<endl;
@@ -140,17 +242,14 @@ void MenuParagem(){
 		unsigned int k;
 		cin >>k;
 		k--;
-		cout <<"Tempo da viagem em minutos";
+		cout <<"Tempo da viagem em minutos:";
 		int tempo;
 		int custo;
-		int distancia;
 		string linha;
 		int opcao2;
 		cin >>tempo;
 		cout << "Custo da viagem(euros):";
 		cin >>custo;
-		cout <<"Distancia entre as paragens(metros):";
-		cin >>distancia;
 		cout << "Tipo de transporte disponiveis:"<<endl;
 		cout << "1: metro"<<endl;
 		cout << "2: comboio"<<endl;
@@ -166,12 +265,12 @@ void MenuParagem(){
 
 		switch(opcao2){
 		case 1:{
-			m= Metro (linha,custo,distancia,tempo);
+			m= Metro (linha,custo,tempo);
 		}
 		break;
-		case 2: {m=Comboio (linha,custo,distancia,tempo);}break;
-		case 3:{m= Autocarro (linha,custo,distancia,tempo);}break;
-		case 4: {m= Caminhar (linha,custo,distancia,tempo);}break;
+		case 2: {m=Comboio (linha,custo,tempo);}break;
+		case 3:{m= Autocarro (linha,custo,tempo);}break;
+		case 4: {m= Caminhar (linha,custo,tempo);}break;
 		default: cout <<"não é uma opção possivel";
 		}
 		if(i<0 || i >= g.getVertexSet().size() || k<0 || k >= g.getVertexSet().size()|| custo<0)

@@ -2,21 +2,21 @@
 #include "classes.h"
 
 //construtores
-Transportes::Transportes(string linha, int dinheiro, int distancia, int tempo,string nome):linha(linha),dinheiro(dinheiro),distancia(distancia),tempo(tempo),nome(nome){
+Transportes::Transportes(string linha, int dinheiro, int tempo,string nome):linha(linha),dinheiro(dinheiro),tempo(tempo),nome(nome){
 
 
 
 }
-Comboio::Comboio(string linha, int dinheiro, int distancia, int tempo):Transportes(linha, dinheiro, distancia, tempo,"Comboio"){
+Comboio::Comboio(string linha, int dinheiro,  int tempo):Transportes(linha, dinheiro, tempo,"Comboio"){
 
 }
-Metro::Metro(string linha, int dinheiro, int distancia, int tempo):Transportes(linha, dinheiro, distancia, tempo,"Metro"){
+Metro::Metro(string linha, int dinheiro,  int tempo):Transportes(linha, dinheiro,  tempo,"Metro"){
 
 }
-Autocarro::Autocarro(string linha, int dinheiro, int distancia, int tempo):Transportes(linha, dinheiro, distancia, tempo,"Autocarro"){
+Autocarro::Autocarro(string linha, int dinheiro,  int tempo):Transportes(linha, dinheiro,  tempo,"Autocarro"){
 
 }
-Caminhar:: Caminhar(string linha, int dinheiro, int distancia, int tempo):Transportes(linha, dinheiro, distancia, tempo,"Caminhar"){
+Caminhar:: Caminhar(string linha, int dinheiro, int tempo):Transportes(linha, dinheiro, tempo,"Caminhar"){
 
 }
 
@@ -27,18 +27,14 @@ string Transportes::getLinha()const {
 int Transportes::getDinheiro()const {
 	return dinheiro;
 }
-int Transportes::getDistancia()const {
-	return distancia;
-}
+
 int Transportes::getTempo()const {
 	return tempo;
 }
 void Transportes::setDinheiro(int dinheiro){
 	this->dinheiro=dinheiro;
 }
-void Transportes::setDistancia(int distancia){
-	this->distancia=distancia;
-}
+
 void Transportes::setTempo(int time){
 	this->tempo=time;
 }

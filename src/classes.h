@@ -7,18 +7,17 @@ class Transportes
 protected:
 	string linha;
 	int dinheiro;
-	int distancia;
+
 	int tempo;
 	string nome;
 public:
 	Transportes(){};
-	Transportes(string linha, int dinheiro, int distancia, int tempo,string nome);
+	Transportes(string linha, int dinheiro, int tempo,string nome);
 	string getLinha() const;
 	int getDinheiro() const;
 	int getDistancia() const;
 	int getTempo() const;
 	void setDinheiro(int dinheiro);
-	void setDistancia(int distancia);
 	void setTempo(int time);
 	string getNome()const;
 };
@@ -26,26 +25,26 @@ public:
 class Comboio: public Transportes
 {
 public:
-	Comboio(string linha, int dinheiro, int distancia, int tempo);
+	Comboio(string linha, int dinheiro,  int tempo);
 
 };
 
 class Metro: public Transportes
 {
 public:
-	Metro(string linha, int dinheiro, int distancia, int tempo);
+	Metro(string linha, int dinheiro, int tempo);
 
 };
 
 class Autocarro: public Transportes
 {
 public:
-	Autocarro(string linha, int dinheiro, int distancia, int tempo);
+	Autocarro(string linha, int dinheiro, int tempo);
 
 };
 class Caminhar: public Transportes
 {
 public:
-	Caminhar(string linha, int dinheiro, int distancia, int tempo);
+	Caminhar(string linha, int dinheiro, int tempo);
 
 };

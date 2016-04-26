@@ -8,7 +8,7 @@
 #ifndef TRANSPORTES_INTERMODAIS_SRC_MENU_H_
 #define TRANSPORTES_INTERMODAIS_SRC_MENU_H_
 
-
+void MenuPesquisas();
 void MenuInicial();
 void MenuParagem();
 

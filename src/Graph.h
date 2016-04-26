@@ -86,9 +86,10 @@ bool Vertex<T>::removeEdgeTo(Vertex<T> *d) {
 	return false;
 }
 
+
 template <class T>
-Vertex<T>::Vertex(T in): info(in), visited(false),processing(false),indegree(0),dist(0){
-	path=NULL;
+Vertex<T>::Vertex(T in): info(in), visited(false), processing(false), indegree(0), dist(0) {
+	path = NULL;
 }
 
 template <class T>
@@ -150,8 +151,11 @@ public:
 	void bellmanFordShortestPath(const T &s);
 	vector<T>getfloydWarshallPath(const T &origin, const T &dest);
 	void getfloydWarshallPathAux(int index1, int index2, vector<T> & res);
+	vector<T> getPath(const T &origin, const T &dest);
 	void floydWarshallShortestPath();
+	void dijkstraShortestPath(const T &s);
 	int edgeCost(int vOrigIndex, int vDestIndex);
+
 	int NumArestas(){
 		int num=0;
 		for(unsigned int i=0; i<vertexSet.size();i++)
@@ -187,7 +191,51 @@ bool Graph<T>::addVertex(const T &in) {
 	vertexSet.push_back(v1);
 	return true;
 }
+//#TODO mudar para custo ou distancia
+template<class T>
+void Graph<T>::dijkstraShortestPath(const T &s) {
 
+	for(unsigned int i = 0; i < vertexSet.size(); i++) {
+		vertexSet[i]->path = NULL;
+		vertexSet[i]->dist = INT_INFINITY;
+		vertexSet[i]->processing = false;
+	}
+
+	Vertex<T>* v = getVertex(s);
+	v->dist = 0;
+
+	vector< Vertex<T>* > pq;
+	pq.push_back(v);
+
+	make_heap(pq.begin(), pq.end());
+
+
+	while( !pq.empty() ) {
+
+		v = pq.front();
+		pop_heap(pq.begin(), pq.end());
+		pq.pop_back();
+
+		for(unsigned int i = 0; i < v->adj.size(); i++) {
+			Vertex<T>* w = v->adj[i].dest;
+
+			if(v->dist + v->adj[i].t.getDinheiro() < w->dist ) {
+
+				w->dist = v->dist + v->adj[i].t.getDinheiro();
+				w->path = v;
+
+				//se já estiver na lista, apenas a actualiza
+				if(!w->processing)
+				{
+					w->processing = true;
+					pq.push_back(w);
+				}
+
+				make_heap (pq.begin(),pq.end(),vertex_greater_than<T>());
+			}
+		}
+	}
+}
 template <class T>
 bool Graph<T>::removeVertex(const T &in) {
 	typename vector<Vertex<T>*>::iterator it= vertexSet.begin();
@@ -503,6 +551,31 @@ void Graph<T>::getfloydWarshallPathAux(int index1, int index2, vector<T> & res)
 		getfloydWarshallPathAux(P[index1][index2],index2, res);
 	}
 }
+template<class T>
+vector<T> Graph<T>::getPath(const T &origin, const T &dest){
+
+	list<T> buffer;
+	Vertex<T>* v = getVertex(dest);
+
+	buffer.push_front(v->info);
+	while ( v->path != NULL &&  v->path->info != origin) {
+		v = v->path;
+		buffer.push_front(v->info);
+	}
+	if( v->path != NULL )
+		buffer.push_front(v->path->info);
+
+
+	vector<T> res;
+	while( !buffer.empty() ) {
+		res.push_back( buffer.front() );
+		buffer.pop_front();
+	}
+	return res;
+}
+
+
+//#TODO mudar o weight para custo
 template<class T>
 int Graph<T>::edgeCost(int vOrigIndex, int vDestIndex)
 {
