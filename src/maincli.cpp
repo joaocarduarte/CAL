@@ -9,6 +9,8 @@
 #include <cstdio>
 #include "graphviewer.h"
 #include <fstream>
+#include "matcher.h"
+
 
 #include <sstream>
 Graph<Paragem> g;
@@ -19,7 +21,8 @@ cout << "                       "<<endl;
 cout << "1. ver grafo em modo Viewer"<<endl;
 cout << "2. Menu de Paragens    "<<endl;
 cout << "3. Pesquisas no grafo         "<<endl;
-cout << "4. quit                "<<endl;
+cout << "4. Pesquisas por Matching de Strings(2ª Parte)"<<endl;
+cout << "5. quit                "<<endl;
 cout <<"Qual a opção :";
 char opcao;
 cin >> opcao;
@@ -41,6 +44,7 @@ case '1':{
 			Sleep(2000);
 			gv->addEdge(e,j,g.findadjonVertex(g.getVertexSet()[j]->getAdj()[k].getDest()),EdgeType::DIRECTED);
 			string s=g.getVertexSet()[j]->getAdj()[k].getTransporte().getLinha();
+
 			gv->setEdgeLabel(e,s); //TODO
 			gv->rearrange();
 
@@ -58,6 +62,9 @@ case '3':
 	MenuPesquisas();
 	break;
 case '4':
+	MenuStringMatching();
+	break;
+case '5':
 	return ;
 	break;
 default:
@@ -66,11 +73,90 @@ default:
 
 }
 }
+void Ordena(vector<int>&v, vector <Paragem>&p){
+
+	for (unsigned int i = 1; i < v.size(); i++)
+	{
+	int tmp = v[i];
+	Paragem tm=p[i];
+	int j;
+	for (j = i; j > 0 && tmp < v[j-1]; j--){
+		v[j] = v[j-1];
+		p[j]=p[j-1];
+	}
+	v[j] = tmp;
+	p[j] = tm;
+	}
+}
+void MenuStringMatching(){
+	cout <<"------Menu String Matching----"<<endl;
+	cout <<"                              "<<endl;
+	cout <<"1.Pesquisar Paragem através de Pesquisa exacta"<<endl;
+	cout <<"2.Pesquisar Paragem através de Pesquisa aproximada"<<endl;
+	cout << "3. Quit"<<endl;
+	char opcao;
+	cin >>opcao;
+		switch(opcao){
+		case '1':{
+			char ignore;
+			string nome;
+			cin.ignore();
+			cin.clear();
+			cout << "Nome da Paragem";
+			getline(cin,nome);
+			int num=0;
+			int tmp;
+			for(unsigned int i=0; i< g.getVertexSet().size();i++){
+				tmp=num;
+			num+=kmp(g.getVertexSet()[i]->getInfo().getNome(),nome);
+			if(tmp!=num)
+				cout <<"Paragem:"<<g.getVertexSet()[i]->getInfo().getNome()<<endl;
+			}
+			cout <<"Numero de Matches encontrados:"<<num<<endl;
+			cin>>ignore;
+
+		}
+		MenuStringMatching();
+			break;
+		case '2':{
+			char ignore;
+			vector<int>v;
+			vector<Paragem>p;
+						string nome;
+						cin.ignore();
+						cin.clear();
+						cout << "Nome da Paragem";
+						getline(cin,nome);
+
+						cout <<endl;
+						for(unsigned int i=0; i< g.getVertexSet().size();i++){
+						p.push_back(g.getVertexSet()[i]->getInfo());
+						v.push_back(editDistance(nome,g.getVertexSet()[i]->getInfo().getNome()));
+						}
+						Ordena(v,p);
+						for(unsigned int i=0;i< v.size();i++){
+							cout << p[i].getNome()<<" : "<<v[i]<<endl;
+						}
+						cout <<"carregue em qualquer tecla";
+						cin>>ignore;
+		}
+		MenuStringMatching();
+			break;
+		case '3':
+			MenuInicial();
+			break;
+
+		}
+
+
+}
+
 void MenuPesquisas(){
 	cout <<"----- Menu Pesquisas----"<<endl;
 	cout <<"                        "<<endl;
 	cout << "1. Percurso mais rápido(bellman)"<<endl;
 	cout << "2. Percurso Mais barato(dijkstra)"<<endl;
+	cout << "3. Percurso com menor numero de paragens"<<endl;
 	cout << "outro qualquer retornará ao menu anterior"<<endl;
 	char opcao;
 	string nome;
@@ -143,6 +229,46 @@ g.addEdge(p,g.getVertexSet()[i]->getInfo(),Caminhar("Pé",0,sqrt(pow(g.getVertexS
 }
 
 		g.dijkstraShortestPath(p);
+		vector <Paragem>v=g.getPath(p,g.getVertexSet()[k]->getInfo());
+				for(unsigned int i = 0; i < v.size(); i++) {
+					if(i==v.size()-1)
+						cout <<v[i].getNome()<<endl;
+					else
+						cout << v[i].getNome() <<"->";
+					}
+
+				if(fer)g.removeVertex(p);
+
+	}
+	MenuPesquisas();
+		break;
+	case '3':{
+		cin.ignore();
+		cin.clear();
+	cout <<"Onde se encontra:";
+	getline(cin,nome);
+
+cout <<"Coordenada x:";
+cin >> x;
+cout <<"Coordenada y:";
+cin >> y;
+for(unsigned int i=0; i< g.getVertexSet().size();i++){
+					cout << i+1 << ") "<< g.getVertexSet()[i]->getInfo().getNome()<<endl;
+				}
+cout <<"Para onde deseja ir:";
+				unsigned int k;
+				cin >>k;
+k--;
+bool fer=false;
+Paragem p(nome,x,y);
+if(g.addVertex(p)){
+fer=true;
+for(unsigned int i=0; i<g.getVertexSet().size();i++){
+g.addEdge(p,g.getVertexSet()[i]->getInfo(),Caminhar("Pé",0,sqrt(pow(g.getVertexSet()[i]->getInfo().getX()-x,2)+pow(g.getVertexSet()[i]->getInfo().getY()-y,2))));
+}
+}
+
+		g.unweightedShortestPath(p);
 		vector <Paragem>v=g.getPath(p,g.getVertexSet()[k]->getInfo());
 				for(unsigned int i = 0; i < v.size(); i++) {
 					if(i==v.size()-1)

@@ -11,6 +11,7 @@
 void MenuPesquisas();
 void MenuInicial();
 void MenuParagem();
+void MenuStringMatching();
 
 
 

@@ -2,5 +2,6 @@
 1,5,Comboio,10,se,10
 2,4,Autocarro,20,Porto,10
 3,1,Metro,10,se,20
-3,5,Autocarro,200,caro,5000
+3,5,Autocarro,20,caro,5000
 4,3,Comboio,10,Porto,20
+5,2,Metro,5,Porto,10

@@ -33,5 +33,11 @@ bool Paragem::operator!=(Paragem p){
 			return false;
 	else return true;
 }
+void Paragem::operator=(Paragem p){
+	this->nome=p.nome;
+	this->x=p.x;
+	this->y=p.y;
+
+}
 
 
