@@ -53,32 +53,49 @@ case '1':{
 		}
 	}
 }
+cout << string(7,'\n');
 MenuInicial();
 	break;
 case '2':
+	cout << string(7,'\n');
 	MenuParagem();
 	break;
 case '3':
+	cout << string(7,'\n');
 	MenuPesquisas();
 	break;
 case '4':
+	cout << string(7,'\n');
 	MenuStringMatching();
 	break;
 case '5':
 	return ;
 	break;
 default:
+	cout << string(7,'\n');
 	MenuInicial();
 	break;
 
 }
 }
-void Ordena(vector<int>&v, vector <Paragem>&p){
+
+template <class T>
+int exists(vector<T>v,T s){
+	for(unsigned int i=0; i< v.size();i++){
+		if(v[i]==s)
+			return i;
+
+	}
+	return -1;
+
+}
+template <class T>
+void Ordena(vector<int>&v, vector <T>&p){
 
 	for (unsigned int i = 1; i < v.size(); i++)
 	{
 	int tmp = v[i];
-	Paragem tm=p[i];
+	T tm=p[i];
 	int j;
 	for (j = i; j > 0 && tmp < v[j-1]; j--){
 		v[j] = v[j-1];
@@ -93,7 +110,9 @@ void MenuStringMatching(){
 	cout <<"                              "<<endl;
 	cout <<"1.Pesquisar Paragem através de Pesquisa exacta"<<endl;
 	cout <<"2.Pesquisar Paragem através de Pesquisa aproximada"<<endl;
-	cout << "3. Quit"<<endl;
+	cout <<"3.Pesquisar se uma linha passa numa Paragem"<<endl;
+	cout <<"4.Pesquisar por onde passa uma linha através de Pesquisa aproximada"<<endl;
+	cout << "5. Quit"<<endl;
 	char opcao;
 	cin >>opcao;
 		switch(opcao){
@@ -125,7 +144,7 @@ void MenuStringMatching(){
 						string nome;
 						cin.ignore();
 						cin.clear();
-						cout << "Nome da Paragem";
+						cout << "Nome da Paragem:";
 						getline(cin,nome);
 
 						cout <<endl;
@@ -134,6 +153,7 @@ void MenuStringMatching(){
 						v.push_back(editDistance(nome,g.getVertexSet()[i]->getInfo().getNome()));
 						}
 						Ordena(v,p);
+						cout <<"Será que quis dizer?"<<endl;
 						for(unsigned int i=0;i< v.size();i++){
 							cout << p[i].getNome()<<" : "<<v[i]<<endl;
 						}
@@ -142,7 +162,137 @@ void MenuStringMatching(){
 		}
 		MenuStringMatching();
 			break;
-		case '3':
+		case '3':{
+			char ignore;
+
+			vector <int>v;
+						string nome,linha;
+						cin.ignore();
+						cin.clear();
+						cout << "Nome da Paragem:";
+						getline(cin,nome);
+						cout << "Nome da Linha:";
+						getline(cin,linha);
+
+						int num=0;
+
+						bool fer=true;
+						for(unsigned int i=0; i< g.getVertexSet().size();i++){
+							num=0;
+						num+=kmp(g.getVertexSet()[i]->getInfo().getNome(),nome);
+						for(unsigned int j=0;j<g.getVertexSet()[i]->getAdj().size();j++){
+
+						if(0<num)
+						{
+
+						v.push_back(i);
+							if(0 < kmp(g.getVertexSet()[i]->getAdj()[j].getTransporte().getLinha(),linha)){
+							cout <<"Encontrou se um match para essa linha e essa paragem"<<endl;
+							cout <<"Paragem:"<<g.getVertexSet()[i]->getInfo().getNome()<<";Linha:"<<g.getVertexSet()[i]->getAdj()[j].getTransporte().getLinha()<<endl;
+							fer=false;
+							}
+						}
+						}
+						}
+						if(fer){
+							if(v.size()==0)
+								cout <<"Não existe essa paragem"<<endl;
+							else{
+							cout <<"Não existe nenhuma linha assim a passar por esta paragem"<<endl;
+							for(unsigned int u=0; u <v.size();u++)
+							for(unsigned int b=0; b< g.getVertexSet()[v[u]]->getAdj().size();b++)
+							cout <<"Linhas que passam por "<<g.getVertexSet()[v[u]]->getInfo().getNome()<<":"<<g.getVertexSet()[v[u]]->getAdj()[b].getTransporte().getLinha()<<endl;
+						}
+						}
+						cin>>ignore;
+
+
+		}
+		MenuStringMatching();
+		break;
+		case '4':{
+			char ignore;
+			vector<int>v;
+			vector<string>s;
+			string nome;
+			cin.ignore();
+			cin.clear();
+			cout << "Nome da Linha:";
+			getline(cin,nome);
+			cout <<endl;
+			for(unsigned int i=0; i< g.getVertexSet().size();i++){
+			for(unsigned int k=0;k<g.getVertexSet()[i]->getAdj().size();k++){
+				if(-1==exists(s,g.getVertexSet()[i]->getAdj()[k].getTransporte().getLinha())){
+			s.push_back(g.getVertexSet()[i]->getAdj()[k].getTransporte().getLinha());
+			v.push_back(editDistance(nome,g.getVertexSet()[i]->getAdj()[k].getTransporte().getLinha()));
+				}
+			}
+			}
+			Ordena(v,s);
+			cout << "A linha mais proxima que foi escolhida foi esta:"<<s[0]<<endl;
+			nome=s[0];
+			cout<<endl;
+			for(unsigned int i=0; i< s.size();i++){
+				cout <<s[i]<<":"<<v[i]<<endl;
+			}
+			cin>>ignore;
+			vector<Paragem>p;
+			//vector<Edge<Paragem>>e;
+			vector<pair<int,int> >key;
+
+			for(unsigned int i=0; i< g.getVertexSet().size();i++){
+						for(unsigned int k=0;k<g.getVertexSet()[i]->getAdj().size();k++){
+						if(g.getVertexSet()[i]->getAdj()[k].getTransporte().getLinha()==nome){
+							if(-1==exists(p,g.getVertexSet()[i]->getInfo())){
+							p.push_back(g.getVertexSet()[i]->getInfo());
+							}
+							if(-1==exists(p,g.getVertexSet()[i]->getAdj()[k].getDest()->getInfo())){
+								p.push_back(g.getVertexSet()[i]->getAdj()[k].getDest()->getInfo());
+							}
+							key.push_back(make_pair(exists(p,g.getVertexSet()[i]->getInfo()),exists(p,g.getVertexSet()[i]->getAdj()[k].getDest()->getInfo())));
+						}
+
+
+
+						}
+			}
+
+			cout<<"Linha       "<<nome<<":"<<endl;
+			for(unsigned int i=0; i< p.size();i++){
+				if(i==p.size()-1)
+					cout<<p[i].getNome()<<endl;
+				else
+				cout<<p[i].getNome()<<",";
+			}
+			cout <<endl;
+			cin>>ignore;
+
+			GraphViewer *gv = new GraphViewer(600, 600, false);
+				gv->createWindow(600,600);
+
+				for(unsigned int i=0;i < p.size();i++){
+				Sleep(2000);
+				gv->addNode(i,p[i].getX(),p[i].getY());
+				gv->setVertexLabel(i,p[i].getNome());
+				gv->rearrange();
+			}
+
+				for(unsigned int l=0;l<key.size();l++){
+							Sleep(2000);
+
+							gv->addEdge(l,key[l].first,key[l].second,EdgeType::DIRECTED);
+							cout <<key[l].first<<";"<<key[l].second<<endl;
+							gv->setEdgeLabel(l,nome);
+							gv->rearrange();
+
+
+						}
+
+		}
+		MenuStringMatching();
+		break;
+
+		case '5':
 			MenuInicial();
 			break;
 
